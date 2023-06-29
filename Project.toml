@@ -4,6 +4,7 @@ authors = ["Renruize12306 <renruize1998@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Genie = "c43c736e-a2d1-11e8-161f-af95117fbd1e"
 GenieDeployDocker = "a082159f-dd50-4f6d-a3c5-00c38fd36577"

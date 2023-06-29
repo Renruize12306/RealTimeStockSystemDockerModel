@@ -71,8 +71,8 @@ using Genie.Renderer.Html
 using SearchLight
 using RealTimeStockSystemDockerModel.Books
 
-function billgatesbooks()
-  html(:books, :billgatesbooks, books = all(Book))
+function billgatesbooks1()
+  html(:books, :billgatesbooks1, books = all(Book))
 end
 
 module API
@@ -82,8 +82,21 @@ using Genie.Renderer.Json
 using SearchLight
 using RealTimeStockSystemDockerModel.Books
 
-function billgatesbooks()
-  json(:books, :billgatesbooks, books = all(Book))
+function billgatesbooks_fun()
+  #=
+  in these cases, you can think of them as "things with a name". in other languages, 
+  you would probably use enumerations or constants for this. they offer nothing else 
+    than you can check for equality, like
+
+  f(a) = a == :big ? 1000 : a == :small ? 10 : error("dunno what is $a")
+
+  f(:big)    # -> 1000
+  f(:small)  # -> 10
+  this construct is also used heavily in metaprogramming, but that's for another day.
+
+  =#
+  # books is the resource locator app/resources/books/views/billgatesbooks_view.json.jl
+  json(:books, :billgatesbooks_view, books = all(Book))
 end
 
 end
