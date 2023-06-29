@@ -22,3 +22,7 @@ function seed()
     save(m)
   end
 end
+
+#=
+julia -e 'using Pkg; Pkg.activate("."); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!();'
+=#
