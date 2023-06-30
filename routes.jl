@@ -75,3 +75,5 @@ route("/movies/search_api", MoviesController.search_api)
 using RealTimeStockSystemDockerModel.CryptoAggregatesController
 
 route("/crypto_aggregates/get_all_by_en_pair", CryptoAggregatesController.get_all_by_en_pair)
+
+route("/crypto_aggregates/initiate_subscription", CryptoAggregatesController.initiate_subscription, named = :ticker_to_subscribe)

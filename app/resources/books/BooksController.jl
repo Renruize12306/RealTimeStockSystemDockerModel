@@ -96,7 +96,7 @@ function billgatesbooks_fun()
 
   =#
   # books is the resource locator app/resources/books/views/billgatesbooks_view.json.jl
-  json(:books, :billgatesbooks_view, books = all(Book))
+  Json.json(:books, :billgatesbooks_view, books = all(Book))
 end
 
 end

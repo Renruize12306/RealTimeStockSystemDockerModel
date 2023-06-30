@@ -24,7 +24,7 @@ function search_api()
               SQLWhereExpression("title LIKE ? OR categories LIKE ? OR description LIKE ? OR actors LIKE ?",
                                   repeat(['%' * params(:search_movies) * '%'], 4)))
 
-  json(Dict("movies" => movies))
+  Json.json(Dict("movies" => movies))
 end
 
 
