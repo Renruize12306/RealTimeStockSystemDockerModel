@@ -34,7 +34,10 @@ ENV PORT "8000"
 ENV WSPORT "8000"
 ENV EARLYBIND "true"
 
-RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!();"
+# Used for database initailization and migration
+# RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!();"
+# Used for database migration
+# RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.status(); Migration.all_up!!();"
 
 # run app
 CMD ["bin/server"]

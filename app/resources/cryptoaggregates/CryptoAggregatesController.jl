@@ -16,7 +16,7 @@ end
 function initiate_subscription()
   # For now, we only allows subscribe one ticker at a time
   task = subscription_helper()
-  
+  @info "The subscription_helper has been called"
   str = params(:ticker_to_subscribe) * "%%%" * params(:ticker_to_unsubscribe) * "%%%" * string(task) * "is running"
 
   Json.json(Dict("crypto_aggregates" => str))
@@ -28,6 +28,7 @@ using JSON, WebSockets
 function subscription_helper()
   json_data = JSON.parse(String(event_data))
   task = @async open_websocket(json_data["input_json"])
+  @info "The async task has been called"
   return task
 end
 
@@ -39,6 +40,7 @@ function open_websocket(arr)
         write(ws, JSON.json(arr[1]))
       end
       subscribe_data(ws, arr[2:length(arr)])
+      @info "The subscribe_data has been called"
     end
   end
 end
