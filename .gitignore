@@ -49,4 +49,4 @@ db/*.sqlite
 .env
 
 
-app/resources/cryptoaggregates/constant.jl
+app/*/constant.jl
