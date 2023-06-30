@@ -47,3 +47,6 @@ db/*.sqlite
 
 # environment variables file
 .env
+
+
+app/resources/cryptoaggregates/constant.jl
