@@ -27,7 +27,9 @@ include("../../../constant.jl")
 using JSON, WebSockets
 function subscription_helper()
   json_data = JSON.parse(String(event_data))
-  task = @async open_websocket(json_data["input_json"])
+  @info "json_data has been parsed"
+  # task = @async open_websocket(json_data["input_json"])
+  open_websocket(json_data["input_json"])
   @info "The async task has been called"
   return task
 end
