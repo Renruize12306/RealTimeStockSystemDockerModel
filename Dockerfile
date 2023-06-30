@@ -1,5 +1,5 @@
-# pull latest julia image
-FROM --platform=linux/amd64 julia:latest
+# pull specific version of julia image
+FROM --platform=linux/x86_64 julia:1.6.2
 
 # create dedicated user
 RUN useradd --create-home --shell /bin/bash genie
@@ -35,7 +35,7 @@ ENV WSPORT "8000"
 ENV EARLYBIND "true"
 
 # Used for database initailization and migration
-RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!();"
+RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!(); Genie.Generator.write_secrets_file()"
 # Used for database migration
 # RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.status(); Migration.all_up!!();"
 

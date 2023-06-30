@@ -15,6 +15,33 @@ deploy to docker
 Set up EC2 instance in min memory is t2.small
 [this website tells us how to set up EC2 instance for us](https://genieframework.github.io/Genie.jl/dev/guides/Deploying_Genie_Apps_On_AWS.html)
 foe the access permission, please type the following command
+
+```
+sudo yum update
+sudo yum install docker -y
+sudo usermod -a -G docker ec2-user
+id ec2-user
+newgrp docker
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+
+# Now we can verify that our docker was installed and runs successfully
+
+
+sudo systemctl status docker.service
+
+# Install Git
+sudo yum install git -y
+
+# build Docker
+
+sudo docker build -t backend .
+sudo docker images 
+
+sudo docker run -p 80:8000 backend
+```
+
+
 ```
 chmod 400 EC2_new_key_val_pair.pem
 ```

@@ -16,7 +16,7 @@ end
 function initiate_subscription()
   # For now, we only allows subscribe one ticker at a time
   task = subscription_helper()
-  @info "The subscription_helper has been called"
+  # @info "The subscription_helper has been called"
   str = params(:ticker_to_subscribe) * "%%%" * params(:ticker_to_unsubscribe) * "%%%" * string(task) * "is running"
 
   Json.json(Dict("crypto_aggregates" => str))
@@ -27,10 +27,10 @@ include("../../../constant.jl")
 using JSON, WebSockets
 function subscription_helper()
   json_data = JSON.parse(String(event_data))
-  @info "json_data has been parsed"
-  # task = @async open_websocket(json_data["input_json"])
-  open_websocket(json_data["input_json"])
-  @info "The async task has been called"
+  # @info "json_data has been parsed"
+  task = @async open_websocket(json_data["input_json"])
+  # open_websocket(json_data["input_json"])
+  # @info "The async task has been called"
   return task
 end
 
@@ -42,7 +42,7 @@ function open_websocket(arr)
         write(ws, JSON.json(arr[1]))
       end
       subscribe_data(ws, arr[2:length(arr)])
-      @info "The subscribe_data has been called"
+      # @info "The subscribe_data has been called"
     end
   end
 end
@@ -64,7 +64,7 @@ function subscribe_data(ws, arr)
           process_websocket_data(data)
           time_after_processing = Dates.value(now())
           print("begin: ", time_before_processing, ", after: ",time_after_processing, ", processing_time: ", time_after_processing - time_before_processing,", \n")
-          @info "streamed data" data
+          # @info "streamed data" data
           # keep track of processing times
           counter+=1
           append!(data_to_save, time_after_processing - time_before_processing)
