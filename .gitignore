@@ -48,5 +48,5 @@ db/*.sqlite
 # environment variables file
 .env
 
+constant.jl
 
-app/*/constant.jl
