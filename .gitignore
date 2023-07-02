@@ -49,4 +49,5 @@ db/*.sqlite
 .env
 
 constant.jl
+t_server.jl
 
