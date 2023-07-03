@@ -1,5 +1,5 @@
 # pull specific version of julia image
-FROM --platform=linux/x86_64 julia:1.7.2
+FROM --platform=linux/x86_64 julia:1.6.2
 
 # create dedicated user
 RUN useradd --create-home --shell /bin/bash genie

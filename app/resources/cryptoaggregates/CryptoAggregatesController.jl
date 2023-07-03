@@ -42,33 +42,34 @@ function open_websocket(arr)
 end
 
 include("CryptoAggregatesProcessor.jl")
-using Base.@atomic
-function pub_data(mgs_chanl::Channel)
-    # msg_out = ""
-    task_inside = @async WebSockets.listen("127.0.0.1", UInt16(8081)) do ws
-      # if msg_out != ""
-      #     send(ws, msg_out)
-      #     msg_out = ""        
-      # end
+function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel)
+    WebSockets.listen("127.0.0.1", UInt16(8081)) do ws
+      msg_out = ""
       try
           while true
-            @atomic begin
-              msg_out = take!(mgs_chanl)
+              msg_out = take!(msg_chanl)
+              while size(msg_buffer, 1) > 0
+                  msg_temp = pop!(msg_buffer)
+                  send(ws, msg_temp)
+                  # println("send msg in vector, ", msg_temp)
+              end
               send(ws, msg_out)
-            end
-              # msg_out = ""
+              # println("send msg in channel, ", msg_out)
+              msg_out = ""
           end
       catch error
           if isa(error, Base.IOError) && error.code == -32
               println("Connection is shut down by the client, re-establish websocket")
               println(error)
+              if msg_out != ""
+                push!(msg_buffer, msg_out)
+              end
           else
               # Unexpected error
               throw(error)
           end
       end
     end
-
 end
 
 function subscribe_data(ws, arr)
@@ -79,8 +80,9 @@ function subscribe_data(ws, arr)
   # count the data processing time
   counter = 0
   data_to_save = Vector{Int64}()
+  mgs_buffer = Vector{String}()
   mgs_chanl = Channel(1)
-  pub_data(mgs_chanl)
+  task = @async pub_data(mgs_buffer,mgs_chanl)
   while isopen(ws.io) 
       received_data = WebSockets.receive(ws)
       
