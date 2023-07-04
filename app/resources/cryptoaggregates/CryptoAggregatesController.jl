@@ -43,7 +43,9 @@ end
 
 include("CryptoAggregatesProcessor.jl")
 function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel)
-    WebSockets.listen("127.0.0.1", UInt16(8081)) do ws
+  # WebSockets.listen("127.0.0.1", UInt16(8081)) do ws  
+  # if test with EC2 please binding with private IPv4 address with terminal 
+    WebSockets.listen("172.31.95.69", UInt16(8081)) do ws
       msg_out = ""
       try
           while true

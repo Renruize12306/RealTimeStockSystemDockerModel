@@ -62,3 +62,15 @@ http://184.73.80.39:80/wss_api
 http://184.73.80.39:80/crypto_aggregates/initiate_subscription?ticker_to_subscribe=BTC_USD_test&ticker_to_unsubscribe=TVVSDV_test
 http://184.73.80.39:80/crypto_aggregates/get_all_by_en_pair?ev_pair=XA_BTC-USD
 ```
+
+```
+running on server
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz
+tar zxvf julia-1.6.2-linux-x86_64.tar.gz
+
+# edit .bashrc
+# ===============================Julia Env Setup============================
+export PATH="$PATH:/home/ec2-user/julia-1.6.2/bin"
+
+source ~/.bashrc
+```

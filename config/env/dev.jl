@@ -2,7 +2,8 @@ using Genie, Logging
 
 Genie.Configuration.config!(
   server_port                     = 8000,
-  server_host                     = "127.0.0.1",
+  # server_host                     = "127.0.0.1", # please change to private ipv4 if test with EC2 terminal
+  server_host                     = "172.31.95.69",
   log_level                       = Logging.Info,
   log_to_file                     = false,
   server_handle_static_files      = true,

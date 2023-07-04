@@ -25,6 +25,8 @@ RUN julia -e "using Pkg; Pkg.activate(\".\"); Pkg.instantiate(); Pkg.precompile(
 # ports
 EXPOSE 8000
 EXPOSE 80
+EXPOSE 8081
+EXPOSE 81
 
 # set up app environment
 ENV JULIA_DEPOT_PATH "/home/genie/.julia"
@@ -35,7 +37,7 @@ ENV WSPORT "8000"
 ENV EARLYBIND "true"
 
 # Used for database initailization and migration
-RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!(); Genie.Generator.write_secrets_file()"
+# RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.init(); Migration.status(); Migration.all_up!!(); Genie.Generator.write_secrets_file()"
 # Used for database migration
 # RUN julia -e "using Pkg; Pkg.activate(\".\"); using Genie, SearchLight, SearchLightSQLite, SearchLight.Migration; SearchLight.Configuration.load() |> SearchLight.connect; Migration.status(); Migration.all_up!!();"
 
