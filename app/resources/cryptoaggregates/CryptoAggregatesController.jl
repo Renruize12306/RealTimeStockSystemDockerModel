@@ -42,15 +42,15 @@ function open_websocket(arr)
 end
 
 include("CryptoAggregatesProcessor.jl")
-function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel)
+function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel, time_save::Vector{Int64})
   # WebSockets.listen("127.0.0.1", UInt16(8081)) do ws  
   # if test with EC2 please binding with private IPv4 address with terminal 
     WebSockets.listen("172.31.95.69", UInt16(8081)) do ws
       msg_out = ""
       try
           while true
-            time_before_notify = Dates.value(now())
               msg_out = take!(msg_chanl)
+              time_before_notify = Dates.value(now())
               while size(msg_buffer, 1) > 0
                   msg_temp = pop!(msg_buffer)
                   send(ws, msg_temp)
@@ -62,6 +62,7 @@ function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel)
               time_after_notify = Dates.value(now())
               time_consumption = time_after_notify - time_before_notify
               println("Notify frontend: ", time_consumption)
+              append!(time_save, time_consumption)
           end
       catch error
           if isa(error, Base.IOError) && error.code == -32
@@ -87,9 +88,10 @@ function subscribe_data(ws, arr)
   counter = 0
   data_to_save = Vector{Int64}()
   mgs_buffer = Vector{String}()
+  time_save = Vector{Int64}()
   mgs_chanl = Channel(1)
-  task = @async pub_data(mgs_buffer,mgs_chanl)
-  while isopen(ws.io) && counter < 7
+  task = @async pub_data(mgs_buffer,mgs_chanl, time_save)
+  while isopen(ws.io) && counter < 33
       received_data = WebSockets.receive(ws)
       
           data = String(received_data)
@@ -102,7 +104,9 @@ function subscribe_data(ws, arr)
           # append!(data_to_save, time_after_processing - time_before_processing)
       
   end
-  print(data_to_save)
+  sleep(1)
+  println("save databse: ", data_to_save)
+  println("notify front end: ",time_save)
 end
 # ====================WSS API Ends====================
 end
