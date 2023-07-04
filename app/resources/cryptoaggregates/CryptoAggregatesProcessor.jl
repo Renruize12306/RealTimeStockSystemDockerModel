@@ -1,6 +1,6 @@
 using JSON, Dates, Genie, HTTP
 
-function process_websocket_data(string_data::AbstractString, mgs_chanl::Channel)
+function process_websocket_data(string_data::AbstractString, mgs_chanl::Channel, data_to_save::Vector{Int64})
     data = JSON.parse(string_data)
     data_single = data[1]
     if "status" in keys(data_single)
@@ -26,7 +26,7 @@ function process_websocket_data(string_data::AbstractString, mgs_chanl::Channel)
     save(ca_single)
 
     # Broadcast the data to frontend
-    Genie.WebChannels.broadcast("____", string_data)
+    # Genie.WebChannels.broadcast("____", string_data)
     # Send as websocket message
     if !isempty(mgs_chanl.data)
         take!(mgs_chanl)
@@ -35,5 +35,7 @@ function process_websocket_data(string_data::AbstractString, mgs_chanl::Channel)
     put!(mgs_chanl, JSON.json(data_single))
 
     time_after_notify_frontend = Dates.value(now())
-    println("Update frontend_time: ", time_after_notify_frontend - time_after_store)
+    time_consumption = time_after_notify_frontend - time_after_store
+    println("Update database: ", time_consumption)
+    append!(data_to_save, time_consumption)
 end

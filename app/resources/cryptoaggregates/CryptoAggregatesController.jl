@@ -49,6 +49,7 @@ function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel)
       msg_out = ""
       try
           while true
+            time_before_notify = Dates.value(now())
               msg_out = take!(msg_chanl)
               while size(msg_buffer, 1) > 0
                   msg_temp = pop!(msg_buffer)
@@ -58,6 +59,9 @@ function pub_data(msg_buffer::Vector{String}, msg_chanl::Channel)
               send(ws, msg_out)
               # println("send msg in channel, ", msg_out)
               msg_out = ""
+              time_after_notify = Dates.value(now())
+              time_consumption = time_after_notify - time_before_notify
+              println("Notify frontend: ", time_consumption)
           end
       catch error
           if isa(error, Base.IOError) && error.code == -32
@@ -85,17 +89,17 @@ function subscribe_data(ws, arr)
   mgs_buffer = Vector{String}()
   mgs_chanl = Channel(1)
   task = @async pub_data(mgs_buffer,mgs_chanl)
-  while isopen(ws.io) 
+  while isopen(ws.io) && counter < 7
       received_data = WebSockets.receive(ws)
       
           data = String(received_data)
-          time_before_processing = Dates.value(now())
-          process_websocket_data(data, mgs_chanl)
-          time_after_processing = Dates.value(now())
-          print("begin: ", time_before_processing, ", after: ",time_after_processing, ", processing_time: ", time_after_processing - time_before_processing,", \n")
+          # time_before_processing = Dates.value(now())
+          process_websocket_data(data, mgs_chanl, data_to_save)
+          # time_after_processing = Dates.value(now())
+          # print("begin: ", time_before_processing, ", after: ",time_after_processing, ", processing_time: ", time_after_processing - time_before_processing,", \n")
           # keep track of processing times
           counter+=1
-          append!(data_to_save, time_after_processing - time_before_processing)
+          # append!(data_to_save, time_after_processing - time_before_processing)
       
   end
   print(data_to_save)
