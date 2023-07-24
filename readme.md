@@ -1,20 +1,25 @@
-run backend sever locally 
+# AWS EC2 model, streaming the real-time market data -- backend service
+This is a backend server of streaming real-time market data, which allows running on either local machine or AWS EC2 instance. For more information in the front end, please refer to repositiory [react_client](https://github.com/Renruize12306/react_client)
+
+## Instructions of running backend services on local machine
+
+Run backend sever in local machine 
 ```
-bash> git clone "project url"
-bash> ./bin/repl
+bash>  git clone "project url"
+bash>  ./bin/repl
 julia> up()
 ```
-build and test docker locally
+Build and test docker container locally
 ```
-using GenieDeployDocker
-GenieDeployDocker.build()
+bash>  julia --project=.
+julia> using GenieDeployDocker
+julia> GenieDeployDocker.build()
 ```
 
-deploy to docker
+## Instructions of running backend services on AWS EC2 machine
 
 Set up EC2 instance in min memory is t2.small
-[this website tells us how to set up EC2 instance for us](https://genieframework.github.io/Genie.jl/dev/guides/Deploying_Genie_Apps_On_AWS.html)
-foe the access permission, please type the following command
+[this website provide instructions of how to set up EC2 instance](https://genieframework.github.io/Genie.jl/dev/guides/Deploying_Genie_Apps_On_AWS.html)
 
 ```
 sudo yum update
@@ -40,13 +45,14 @@ sudo docker images
 
 sudo docker run -p 80:8000 backend
 ```
-
+For the permission issues, please type the following command
 
 ```
 chmod 400 EC2_new_key_val_pair.pem
 ```
 
-touch the constant.jl file 
+First, we need to create constant.jl file to configure the some credientails and the ticker we want to subscribe. In this case, aggregate price data for Bitcoin USD using the polygon.io web socket cryptocurrency endpoint.
+
 ```
 AUTH_PARAM="key from polygon"
 
@@ -56,15 +62,17 @@ event_data = "{\"input_json\":[
     ]}"
 ```
 
-test in the docker 
+The following link is how to test in the the server, 184.73.80.39 is the public IPV4 for that particular EC2 instance, you can access in the AWS console, 80 is the port number, we mapping the port number 80 outside of the docker to the inside application on the port number 8000.
 ```
-http://184.73.80.39:80/wss_api
-http://184.73.80.39:80/crypto_aggregates/initiate_subscription?ticker_to_subscribe=BTC_USD_test&ticker_to_unsubscribe=TVVSDV_test
+# this are the http request made by the front end.
+http://184.73.80.39:80/crypto_aggregates/initiate_subscription?ticker_to_subscribe=place_holder1&ticker_to_unsubscribe=place_holder2
 http://184.73.80.39:80/crypto_aggregates/get_all_by_en_pair?ev_pair=XA_BTC-USD
 ```
 
+Currently, there is there are some issues in mapping the docker websocket port in EC2 instance. Alternately, there is another way of starting backend services, below are the instructions
+
 ```
-running on server
+# SSH to the server, installing corresponding julia env
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz
 tar zxvf julia-1.6.2-linux-x86_64.tar.gz
 
@@ -73,4 +81,6 @@ tar zxvf julia-1.6.2-linux-x86_64.tar.gz
 export PATH="$PATH:/home/ec2-user/julia-1.6.2/bin"
 
 source ~/.bashrc
+
+# then execute the same local deployment as mentioned before.
 ```
